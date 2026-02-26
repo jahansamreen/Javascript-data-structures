@@ -614,7 +614,7 @@ function smallest_in_rotate(nums){
         let mid = Math.floor((left + right)/2);
 
         if(nums[mid]>nums[right]){
-            left=left+1;
+            left=mid+1;
         }
         else right=mid;
     }
@@ -640,3 +640,4 @@ function removeVowel2(str){
 }
 
 console.log("removeVowels: ", removeVowel2("hello world"));
+

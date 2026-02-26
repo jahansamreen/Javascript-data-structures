@@ -136,3 +136,55 @@ export default function App() {
     </div>
   );
 }
+
+import React, { useState } from "react";
+
+const data = {
+  India: ["Maharashtra", "Karnataka", "Delhi"],
+  USA: ["California", "Texas", "Florida"],
+  UK: ["London", "Manchester", "Birmingham"]
+};
+
+export default function DependentDropdown() {
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+
+  const handleCountryChange = (e) => {
+    setCountry(e.target.value);
+    setState(""); // reset state dropdown
+  };
+
+  return (
+    <div style={{ width: "300px", margin: "40px auto" }}>
+      <h3>Dependent Dropdown</h3>
+
+      {/* Country Dropdown */}
+      <select value={country} onChange={handleCountryChange}>
+        <option value="">Select Country</option>
+        {Object.keys(data).map((c) => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
+      </select>
+
+      <br />
+      <br />
+
+      {/* State Dropdown */}
+      <select
+        value={state}
+        onChange={(e) => setState(e.target.value)}
+        disabled={!country}
+      >
+        <option value="">Select State</option>
+        {country &&
+          data[country].map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+}
