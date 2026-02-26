@@ -360,16 +360,283 @@ console.log("reverse string order: ", r("I love coding!"));
 // }
 
 function twoSum(nums,target){
-    let st = new Set();
-    let  res= new Set();
+   let res= new Set();
+   let st=new Set();
 
-    for(let num of nums){
+   for(let num of nums){
+    let complement = target-num;
+    if(st.has(complement)){
+        const pair = [Math.min(complement,num),Math.max(complement,num)];
+        res.add(pair.toString());
+        // converting pair(which are arrays) to string :-
+        // because of how set works with 
+//   Eg:-      const s = new Set();
 
-        if(st.has(num)){
-            
+// s.add([2, 6]);
+// s.add([2, 6]);
+
+// console.log(s.size); // 2 ❌
+//     }
+
+// Arrays are objects
+
+// Objects are compared by reference, not by value
+    
+   }
+   st.add(num);
+}
+
+   return Array.from(res).map(pair=>pair.split(',').map(Number));
+}
+
+console.log("two sum: ",twoSum([1, 2, 3, 4, 5, 6, 7], 8));
+
+// Q 11) Given a sentence, check weather it is a palindrome after removing spaces and punctuation
+
+function isPalindrome(sentence){
+    let left=0, right=sentence.length -1;
+    while(left<right){
+        while(left<right && !isAlphaNumeric(sentence[left])){
+            left++;
         }
-        st.add(num);
+        while(left<right && !isAlphaNumeric(sentence[right])){
+            right--;
+        }
+        if(sentence[left].toLowerCase()!== sentence[right].toLowerCase()){
+            return false;
+        }
+        left++;
+        right--;
+    }
+    return true;
+}
+
+function isAlphaNumeric(char){
+  
+    return /^[a-z0-9]$/i.test(char);
+}
+
+
+
+console.log("isPalindrome: ",isPalindrome("A man, a plan, a canal: Panama"));
+
+// Given an array, return true if it contains any duplicate numbers.
+function duplicate1(arr){
+    let st = new Set();
+    for(let a of arr){
+        if(st.has(a)){
+         return true;
+        }
+        st.add(a);
+    }
+    return false;
+}
+
+function duplicate2(arr){
+    arr.sort((a,b)=>a-b);
+    for(let i=1; i<arr.length; i++){
+        if(arr[i]===arr[i-1])return true;
+    }
+    return true;
+}
+console.log("duplicate: ", duplicate2([1,2,2,5,6,7,3,1,4]));
+
+//13) Replace every space if a string with "%20"
+
+function replaceSpace1(s){
+    return s.split(' ').join('%20');
+    // str.split(' ') → splits string into array of words
+}
+function replaceSpace2(s){
+    let res="";
+    for(let ch of s){
+        if(ch===' '){
+            res+='%20';
+        }
+        else res+=ch;
+    }
+    return res;
+}
+console.log("replaceSpace :",replaceSpace2("Mr John Smith"));
+
+// 14) Find the majority element in the array (element that appears more than half
+
+function majorityElement1(nums){
+ let n=nums.length;
+ let cnt=0;
+ let candidate=null;
+
+ for(let num of nums){
+    if(cnt===0){
+        candidate=num;
+    }
+    cnt+=(candidate === num)?1:-1;
+ }
+ return cnt;
+}
+
+function majorityElement2(nums){
+    const countMap={};
+    for(let num of nums){
+        countMap[num]=(countMap[num] || 0)+1; 
+        if(countMap[num]>nums.length/2){
+            return num;
+        }
     }
 }
 
-console.log(twoSum([1, 2, 3, 4, 5, 6, 7], 8));
+console.log("majorityElement: ", majorityElement2([3, 3, 4, 2, 3, 3, 3]));
+
+// Q15) Count how many times each character appears in a string and returns the frequency map
+function charFreq1(s){
+    let freq={};
+    for(let c of s){
+        if(freq[c]){
+            freq[c]++;
+        }
+        else{
+            freq[c]=1;
+        }
+    }
+    return freq;
+}
+
+function charFreq2(s){
+    const mp=new Map();
+    for(let c of s){
+        mp.set(c,(mp.get(c) || 0) + 1);
+    }
+    return mp;
+}
+console.log("charFreq: ", charFreq2("hello world"));
+
+// 16)Remove all duplicates values from an array an return the cleaned version. 
+function removeDup1(nums){
+    let st=new Set();
+    let res=[];
+    for(let num of nums){
+        if(!st.has(num)){
+            st.add(num);
+            res.push(num);
+        }
+        
+       
+    }
+    return res;
+}
+
+function removeDup2(nums){
+    return nums.filter((item,index)=> nums.indexOf(item)===index);
+}
+console.log("removeDup: ", removeDup2([1,3,6,1,2,4,3,3,8,5]))
+
+// Q.17) Given a string,find the longest palindromic substring inside it.
+
+// Q.18)Missing no
+function missingNumber(nums){
+    let n=nums.length;
+    let sum1=(n*(n+1))/2;
+    let sum2= nums.reduce((acc,curr)=>acc+curr, 0);
+    return sum1-sum2;
+}
+
+function missingNumber2(nums){
+    let n=nums.length;
+    let xorr=0;
+    for(let i=0; i<=n; i++){
+        xorr ^=i;
+    }
+    for(let num of nums){
+        xorr ^=num;
+    }
+    return xorr;
+}
+console.log("missingNumber: ",missingNumber2([3,0,1]));
+
+// Q19) check weather 2 string becomes = after processing word order intact.
+
+// Q21) Reverse each word in a string
+function reverseWords(str){
+    return str
+    .split(' ')
+    .map(word=>word.split('').reverse().join(''))
+    .join(' ');
+}
+
+console.log("reverseWords: ", reverseWords("I love coding"));
+
+// Q 20) Merge 2 sorted array into a single array
+function merge(nums1,nums2){
+    let res=[];
+    let i=0,j=0;
+    while(i<nums1.length && j<nums2.length){
+        if(nums1[i]<nums2[j]){
+            res.push(nums1[i]);
+            i++;
+        }
+        else{
+            res.push(nums2[j]);
+            j++;
+        }
+    }
+
+    while(i<nums1.length){
+        res.push(nums1[i]);
+        i++;
+    }
+    while(j<nums2.length){
+        res.push(nums2[j]);
+        j++;
+    }
+    return res;
+}
+
+console.log("merge: ", merge([1,3,5],[2,4,6]));
+
+// Q22) Smallest value in array
+function smallest(nums){
+    let mini=Infinity;
+    for(let num of nums){
+        if(num<mini){
+            mini=num;
+        }
+    }
+    return mini;
+}
+console.log("smallest: ",smallest([6,7,3,9,6,4]));
+
+// Q22 follow up (Smallest value in rotated sorted array ):-
+// [4,5,6,1,2,3]
+
+function smallest_in_rotate(nums){
+    left =0, right=nums.length-1;
+    while(left<right){
+        let mid = Math.floor((left + right)/2);
+
+        if(nums[mid]>nums[right]){
+            left=left+1;
+        }
+        else right=mid;
+    }
+    return nums[left];
+}
+
+console.log("smallest in rotated sorted array: ", smallest_in_rotate([4, 5, 6, 1, 2, 3]));
+
+// Q 23) Remove the vowels and return the modified string
+
+function removeVowel(s){
+    let res="";
+    let vowels= "aeiouAEIOU";
+    for(let c of s){
+        if(!vowels.includes(c)){
+            res+=c;
+        }
+    }
+    return res;
+}
+function removeVowel2(str){
+    return str.replace(/[aeiouAEIOU]/g,"");
+}
+
+console.log("removeVowels: ", removeVowel2("hello world"));
