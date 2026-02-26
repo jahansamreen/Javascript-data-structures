@@ -92,3 +92,47 @@ export default function App() {
     </div>
   );
 }
+
+// Q4. Fetch & Display Data
+
+import { useEffect, useState } from "react";
+import "./styles.css";
+
+export default function App() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setUsers(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <h3>Loading...</h3>;
+  if (error) return <h3>Error..{error}</h3>;
+  return (
+    <div className="App">
+      <h1>User list</h1>
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>
+            <strong>{user.name}</strong>-{user.email}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
